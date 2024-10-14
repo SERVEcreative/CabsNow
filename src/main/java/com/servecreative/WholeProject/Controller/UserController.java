@@ -16,14 +16,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<User> createUser(@RequestBody User user) {
-//        User savedUser = userService.saveUser(user);
-//        if (savedUser!=null)
-//          return ResponseEntity.ok(savedUser);
-//        else
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//    }
+    @PostMapping("/signup")
+    public ResponseEntity<User> createUser1(@RequestBody User user) {
+        User savedUser = userService.saveUser(user);
+        if (savedUser!=null)
+          return ResponseEntity.ok(savedUser);
+        else
+            return (ResponseEntity<User>) ResponseEntity.status(HttpStatus.UNAUTHORIZED);
+    }
 
 
     @PostMapping("/signup")
