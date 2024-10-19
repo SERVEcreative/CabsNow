@@ -5,9 +5,9 @@ import com.servecreative.WholeProject.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-
+//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 
 import java.util.List;
@@ -19,15 +19,12 @@ public class UserService {
     private UserRepository userRepository;
 
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User saveUser(User user) {
-//        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-//        user.setPassword(encryptedPassword);
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
         return userRepository.save(user);
     }
 
@@ -43,9 +40,17 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User getUserByEmailAndPassword(String email,String password)
-    {
-        return userRepository.findByEmailAndPassword(email,password);
+    public User getUserByEmailAndPassword(String email, String password) {
+
+        User user = userRepository.findByEmail(email);
+
+        // Check if user exists and if the password matches
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        } else {
+            return null;
+        }
+
     }
 
 }

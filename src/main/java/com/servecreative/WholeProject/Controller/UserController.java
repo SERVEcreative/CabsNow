@@ -16,16 +16,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @PostMapping("/signup")
-//    public ResponseEntity<User> createUser1(@RequestBody User user) {
-//        User savedUser = userService.saveUser(user);
-//        if (savedUser!=null)
-//          return ResponseEntity.ok(savedUser);
-//        else
-//            return (ResponseEntity<User>) ResponseEntity.status(HttpStatus.UNAUTHORIZED);
-//    }
-
-
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
@@ -37,7 +27,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/getallusers")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
@@ -45,9 +34,8 @@ public class UserController {
 
     @GetMapping("/login")
     public ResponseEntity<User> getUserByEmailPassword(@RequestParam String email,
-                                                       @RequestParam String password)
-    {
-        User user = userService.getUserByEmailAndPassword(email,password);
+                                                       @RequestParam String password) {
+        User user = userService.getUserByEmailAndPassword(email, password);
         if (user != null) {
             return ResponseEntity.ok(user);
         } else {
