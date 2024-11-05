@@ -13,6 +13,7 @@ public class Duty {
     private int dutyId;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     private DutyStatus status;  // Status of the duty (e.g., PENDING, ACCEPTED)
 
     @ManyToOne
