@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF protection for testing purposes
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(//"/api/users/signup", "/api/users/login",
-                                "/api/users/**").permitAll() // Allow unauthenticated access
+                                "/api/**").permitAll() // Allow unauthenticated access
                         .anyRequest().authenticated() // Require authentication for all other requests
                 ).httpBasic(withDefaults()); // Use HTTP Basic authentication
 
