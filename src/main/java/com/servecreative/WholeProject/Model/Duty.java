@@ -28,6 +28,13 @@ public class Duty {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now(); // Timestamp for duty creation
 
+    @Column(name = "pickup_location", nullable = false)
+    private String pickupLocation; // Pickup location for the ride
+
+    @Column(name = "drop_location", nullable = false)
+    private String dropLocation; // Drop location for the ride
+
+
     // Getters and Setters
     public int getDutyId() {
         return dutyId;
@@ -68,11 +75,27 @@ public class Duty {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    public String getPickupLocation() {
+        return pickupLocation;
+    }
+
+    public void setPickupLocation(String pickupLocation) {
+        this.pickupLocation = pickupLocation;
+    }
+
+    public String getDropLocation() {
+        return dropLocation;
+    }
+
+    public void setDropLocation(String dropLocation) {
+        this.dropLocation = dropLocation;
+    }
 
     public enum DutyStatus {
         PENDING,
         ACCEPTED,
         REJECTED,
         COMPLETED
+
     }
 }

@@ -2,8 +2,10 @@ package com.servecreative.WholeProject.Services;
 
 import com.servecreative.WholeProject.Model.Duty;
 import com.servecreative.WholeProject.Model.Driver;
+import com.servecreative.WholeProject.Model.Rider;
 import com.servecreative.WholeProject.Repository.DriverRepository;
 import com.servecreative.WholeProject.Repository.DutyRepository;
+import com.servecreative.WholeProject.Repository.RiderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,13 @@ public class DutyService {
     @Autowired
     private DriverRepository driverRepository;
 
+
     public Duty createDuty(Duty duty) {
         duty.setStatus(Duty.DutyStatus.PENDING); // Default status
         return dutyRepository.save(duty);
     }
+
+
 
     public Optional<Duty> getDutyById(int dutyId) {
         return dutyRepository.findById(dutyId);

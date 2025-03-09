@@ -56,6 +56,7 @@ public class DutyController {
         }
     }
 
+
     @GetMapping("/getAllDutyDyStatusPending")
     public ResponseEntity<List<Duty>> getDutyByStatus() {
         List<Duty> dutyList = dutyService.getDutyByStatusPending();
