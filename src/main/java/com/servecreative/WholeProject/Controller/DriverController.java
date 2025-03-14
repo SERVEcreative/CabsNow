@@ -21,34 +21,20 @@ public class DriverController {
         this.driverService = driverService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Driver>> getAllDrivers() {
-        List<Driver> drivers = driverService.getAllDrivers();
-        return new ResponseEntity<>(drivers, HttpStatus.OK);
+    @PostMapping("/accept/{dutyId}/{driverId}")
+    public ResponseEntity<String> acceptDuty(@PathVariable int dutyId, @PathVariable int driverId) {
+        return ResponseEntity.ok(driverService.acceptDuty(driverId, dutyId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Driver> getDriverById(@PathVariable("id") int driverId) {
-        Optional<Driver> driver = driverService.getDriverById(driverId);
-        return driver.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @PostMapping("/ignore/{dutyId}/{driverId}")
+    public ResponseEntity<String> ignoreDuty(@PathVariable int dutyId, @PathVariable int driverId) {
+        return ResponseEntity.ok(driverService.ignoreDuty(driverId, dutyId));
     }
 
-    @PostMapping("/createDriver")
-    public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
-        Driver savedDriver = driverService.saveDriver(driver);
-        return new ResponseEntity<>(savedDriver, HttpStatus.CREATED);
+    @PostMapping("/complete/{dutyId}/{driverId}")
+    public ResponseEntity<String> completeDuty(@PathVariable int dutyId, @PathVariable int driverId) {
+        return ResponseEntity.ok(driverService.completeDuty(driverId, dutyId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDriver(@PathVariable("id") int driverId) {
-        driverService.deleteDriver(driverId);
-        return ResponseEntity.noContent().build();
-    }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Driver>> getDriversByStatus(@PathVariable String status) {
-        List<Driver> drivers = driverService.getDriversByStatus(status);
-        return new ResponseEntity<>(drivers, HttpStatus.OK);
-    }
 }
