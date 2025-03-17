@@ -1,6 +1,7 @@
 package com.servecreative.WholeProject.Controller;
 
 import com.servecreative.WholeProject.Model.*;
+import com.servecreative.WholeProject.Services.RiderService;
 import com.servecreative.WholeProject.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,20 +17,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RiderService riderService;
+
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User savedUser = userService.saveUser(user);
+            Rider rider = new Rider(savedUser.getId(), savedUser.getFirstName() + " " + savedUser.getLastName(), savedUser.getPhone());
+            riderService.saveRider(rider);
             return ResponseEntity.ok(savedUser); // Return saved user
         } catch (Exception e) {
             // Log the exception
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Return null on error
         }
-    }
-
-    @GetMapping("/getallusers")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
     }
 
     @GetMapping("/login")
