@@ -24,6 +24,10 @@ public class Driver {
     @Column(nullable = false,unique = true)
     private String aadharNumber;
 
+    @Column(nullable = false)
+    private String password;
+
+
 
     @Enumerated(EnumType.STRING)
     private DriverStatus status; // Driver's current status
@@ -33,6 +37,8 @@ public class Driver {
     private List<Duty> duties;  // List of duties assigned to the driver
 
     // Getters and Setters
+
+
     public int getDriverId() {
         return driverId;
     }
@@ -93,5 +99,15 @@ public class Driver {
 
     public void setAadharNumber(String aadharNumber) {
         this.aadharNumber = aadharNumber;
+    }
+
+    // Getter for password
+    public String getPassword() {
+        return password;
+    }
+
+    // Setter for password
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
