@@ -34,6 +34,13 @@ public class Duty {
     @Column(name = "drop_location", nullable = false)
     private String dropLocation; // Drop location for the ride
 
+    @Column(name = "fare", nullable = false)
+    private double fare; // Fare for the ride
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vehicle_type", nullable = false, length = 20)
+    private VehicleType vehicleType; // Type of vehicle chosen for the ride
+
 
     // Getters and Setters
     public int getDutyId() {
@@ -90,6 +97,21 @@ public class Duty {
     public void setDropLocation(String dropLocation) {
         this.dropLocation = dropLocation;
     }
+    public double getFare() {
+        return fare;
+    }
+
+    public void setFare(double fare) {
+        this.fare = fare;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
+    }
 
     public enum DutyStatus {
         PENDING,
@@ -97,5 +119,13 @@ public class Duty {
         REJECTED,
         COMPLETED
 
+    }
+
+    public enum VehicleType {
+        ECONOMY,
+        SEDAN,
+        SUV,
+        LUXURY,
+        BIKE
     }
 }
