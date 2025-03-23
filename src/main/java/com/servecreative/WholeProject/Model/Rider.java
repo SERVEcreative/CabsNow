@@ -9,7 +9,6 @@ import java.util.List;
 public class Rider {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int riderId;
 
     @Column(nullable = false)
@@ -23,6 +22,16 @@ public class Rider {
     private List<Duty> duties;  // List of duties created by the rider
 
     // Getters and Setters
+
+    // Default Constructor
+    public Rider() {}
+
+    // Constructor to set values manually
+    public Rider(int riderId, String name, String phoneNumber) {
+        this.riderId = riderId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
     public int getRiderId() {
         return riderId;
     }
