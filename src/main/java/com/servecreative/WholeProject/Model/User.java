@@ -8,7 +8,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-generate IDs and auto incremented id hoga
-    private Long id;
+    private int id;
 
     @Column(name = "first_name", nullable = false)    // @column name jo yahan hai same table mein hona chahiye
     private String firstName;                  //variable name kuchh bhi ho sakta hai
@@ -38,11 +38,11 @@ public class User implements Serializable {
     }
 
     // Getters and setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
