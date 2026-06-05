@@ -1,13 +1,27 @@
 package com.servecreative.WholeProject.DTO;
 
-public class DriverSignupRequest {
-    private String name;
-    private String phoneNumber;
-    private String vehicleNumber;
-    private String aadharNumber;
-    private String password; // For authentication
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-    // Getters and Setters
+public class DriverSignupRequest {
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    @Size(min = 10, max = 15)
+    private String phoneNumber;
+
+    @NotBlank
+    private String vehicleNumber;
+
+    @NotBlank
+    @Size(min = 12, max = 12)
+    private String aadharNumber;
+
+    @NotBlank
+    @Size(min = 8, max = 100)
+    private String password;
+
     public String getName() {
         return name;
     }

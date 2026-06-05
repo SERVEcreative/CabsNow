@@ -1,10 +1,14 @@
 package com.servecreative.WholeProject.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class DriverLoginRequest {
+    @NotBlank
     private String phoneNumber;
+
+    @NotBlank
     private String password;
 
-    // Getters and Setters
     public String getPhoneNumber() {
         return phoneNumber;
     }
