@@ -1,8 +1,10 @@
 package com.servecreative.WholeProject.Controller;
 
+import com.servecreative.WholeProject.DTO.AuthResponse;
 import com.servecreative.WholeProject.DTO.DriverLoginRequest;
 import com.servecreative.WholeProject.DTO.DriverSignupRequest;
 import com.servecreative.WholeProject.Services.DriverAuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +19,12 @@ public class DriverAuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody DriverSignupRequest request) {
+    public ResponseEntity<AuthResponse> signup(@Valid @RequestBody DriverSignupRequest request) {
         return ResponseEntity.ok(driverAuthService.signup(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody DriverLoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody DriverLoginRequest request) {
         return ResponseEntity.ok(driverAuthService.login(request));
     }
 }

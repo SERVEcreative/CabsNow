@@ -1,6 +1,7 @@
 package com.servecreative.WholeProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -25,12 +26,16 @@ public class Driver {
     private String aadharNumber;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
 
 
     @Enumerated(EnumType.STRING)
-    private DriverStatus status; // Driver's current status
+    private DriverStatus status;
+
+    private Double latitude;
+    private Double longitude;
 
     @OneToMany(mappedBy = "assignedDriver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
@@ -110,4 +115,9 @@ public class Driver {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
 }

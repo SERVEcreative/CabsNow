@@ -1,46 +1,56 @@
 package com.servecreative.WholeProject.Controller;
 
+import com.servecreative.WholeProject.DTO.BookRideRequest;
 import com.servecreative.WholeProject.Model.Duty;
 import com.servecreative.WholeProject.Services.RiderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.servecreative.WholeProject.securityConfig.AuthenticatedUser;
+import com.servecreative.WholeProject.securityConfig.SecurityHelper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/riders")
+@RequestMapping("/api/riders")
 public class RiderController {
 
-    @Autowired
-    private RiderService riderService;
+    private final RiderService riderService;
+    private final SecurityHelper securityHelper;
 
-    // Book a ride
-    @PostMapping("/book")
-    public Duty bookRide(@RequestParam int riderId,
-                         @RequestParam String pickupLocation,
-                         @RequestParam String dropLocation,
-                         @RequestParam String vehicleType) {
-        return riderService.bookRide(riderId, pickupLocation, dropLocation,vehicleType);
+    public RiderController(RiderService riderService, SecurityHelper securityHelper) {
+        this.riderService = riderService;
+        this.securityHelper = securityHelper;
     }
-    //cancel a ride
-    @PutMapping("/cancelDuties/{riderId}")
-    public ResponseEntity<Duty> cancelRide(@PathVariable int riderId) {
-        Duty updatedDuty = riderService.cancelRide(riderId);
+
+    @PostMapping("/book")
+    public Duty bookRide(@Valid @RequestBody BookRideRequest request) {
+        AuthenticatedUser rider = securityHelper.requireRider();
+        return riderService.bookRide(
+                rider.id(),
+                request.getPickupLocation(),
+                request.getDropLocation(),
+                request.getVehicleType(),
+                request.getFare(),
+                request.getPickupLat(),
+                request.getPickupLng());
+    }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<Duty> cancelRide() {
+        AuthenticatedUser rider = securityHelper.requireRider();
+        Duty updatedDuty = riderService.cancelRide(rider.id());
         return ResponseEntity.ok(updatedDuty);
     }
-    @GetMapping("/history/pdf/{riderId}")
-    public ResponseEntity<byte[]> downloadDutyHistoryPdf(@PathVariable int riderId) {
-        byte[] pdfBytes = riderService.generateDutyHistoryPdf(riderId);
 
-        if (pdfBytes == null) {
-            return ResponseEntity.internalServerError().build();
-        }
+    @GetMapping("/history/pdf")
+    public ResponseEntity<byte[]> downloadDutyHistoryPdf() {
+        AuthenticatedUser rider = securityHelper.requireRider();
+        byte[] pdfBytes = riderService.generateDutyHistoryPdf(rider.id());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Duty_History.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfBytes);
     }
-
 }

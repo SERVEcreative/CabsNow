@@ -27,4 +27,8 @@ public interface DriverRepository extends JpaRepository<Driver, Integer> {
 
     Optional<Driver> findByPhoneNumber(String phoneNumber);
     boolean existsByPhoneNumber(String phoneNumber);
+    List<Driver> findByStatus(Driver.DriverStatus status);
+
+    @Query("SELECT d FROM Driver d WHERE d.status = 'AVAILABLE' AND d.latitude IS NOT NULL AND d.longitude IS NOT NULL")
+    List<Driver> findAvailableWithLocation();
 }

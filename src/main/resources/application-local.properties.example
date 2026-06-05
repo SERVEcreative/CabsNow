@@ -1,0 +1,8 @@
+# Copy to application-local.properties (gitignored) for local overrides
+spring.datasource.password=your_mysql_password
+graphhopper.api.key=your_graphhopper_api_key
+
+# If you have an old DB schema, either drop & recreate user_management
+# OR temporarily disable Flyway and use Hibernate update:
+# spring.flyway.enabled=false
+# spring.jpa.hibernate.ddl-auto=update

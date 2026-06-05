@@ -1,4 +1,5 @@
 package com.servecreative.WholeProject.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
@@ -23,6 +24,7 @@ public class User implements Serializable {
     private String phone;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     // Default constructor
