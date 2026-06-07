@@ -35,7 +35,7 @@ public class RiderService {
     }
 
     public Duty bookRide(int riderId, String pickupLocation, String dropLocation, String vehicleType,
-                         double fare, Double pickupLat, Double pickupLng) {
+                         double fare, Double pickupLat, Double pickupLng, Double dropLat, Double dropLng) {
         Rider rider = riderRepository.findById(riderId)
                 .orElseThrow(() -> new RuntimeException("Rider not found"));
 
@@ -58,6 +58,10 @@ public class RiderService {
         duty.setDropLocation(dropLocation);
         duty.setVehicleType(parsedVehicleType);
         duty.setFare(fare);
+        duty.setPickupLat(pickupLat);
+        duty.setPickupLng(pickupLng);
+        duty.setDropLat(dropLat);
+        duty.setDropLng(dropLng);
 
         Duty saved = dutyRepository.save(duty);
         rideEventPublisher.publish(saved, "Finding nearby drivers…", pickupLat, pickupLng);

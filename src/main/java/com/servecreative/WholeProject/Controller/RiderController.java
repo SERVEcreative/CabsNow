@@ -33,7 +33,9 @@ public class RiderController {
                 request.getVehicleType(),
                 request.getFare(),
                 request.getPickupLat(),
-                request.getPickupLng());
+                request.getPickupLng(),
+                request.getDropLat(),
+                request.getDropLng());
     }
 
     @PutMapping("/cancel")

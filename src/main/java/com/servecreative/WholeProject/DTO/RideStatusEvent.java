@@ -14,6 +14,15 @@ public class RideStatusEvent {
     private Long acceptDeadlineEpochMs;
     private long timestampEpochMs;
     private Integer nearbyDriversNotified;
+    private String eventType;
+    private Double pickupLat;
+    private Double pickupLng;
+    private Double dropLat;
+    private Double dropLng;
+    private Double driverLat;
+    private Double driverLng;
+    private Double riderLat;
+    private Double riderLng;
 
     public RideStatusEvent() {}
 
@@ -52,4 +61,22 @@ public class RideStatusEvent {
     public void setTimestampEpochMs(long timestampEpochMs) { this.timestampEpochMs = timestampEpochMs; }
     public Integer getNearbyDriversNotified() { return nearbyDriversNotified; }
     public void setNearbyDriversNotified(Integer nearbyDriversNotified) { this.nearbyDriversNotified = nearbyDriversNotified; }
+    public String getEventType() { return eventType; }
+    public void setEventType(String eventType) { this.eventType = eventType; }
+    public Double getPickupLat() { return pickupLat; }
+    public void setPickupLat(Double pickupLat) { this.pickupLat = pickupLat; }
+    public Double getPickupLng() { return pickupLng; }
+    public void setPickupLng(Double pickupLng) { this.pickupLng = pickupLng; }
+    public Double getDropLat() { return dropLat; }
+    public void setDropLat(Double dropLat) { this.dropLat = dropLat; }
+    public Double getDropLng() { return dropLng; }
+    public void setDropLng(Double dropLng) { this.dropLng = dropLng; }
+    public Double getDriverLat() { return driverLat; }
+    public void setDriverLat(Double driverLat) { this.driverLat = driverLat; }
+    public Double getDriverLng() { return driverLng; }
+    public void setDriverLng(Double driverLng) { this.driverLng = driverLng; }
+    public Double getRiderLat() { return riderLat; }
+    public void setRiderLat(Double riderLat) { this.riderLat = riderLat; }
+    public Double getRiderLng() { return riderLng; }
+    public void setRiderLng(Double riderLng) { this.riderLng = riderLng; }
 }

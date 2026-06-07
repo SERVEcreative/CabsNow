@@ -61,7 +61,15 @@ public class RideEventPublisher {
 
         if (duty.getAssignedDriver() != null) {
             event.setDriverName(duty.getAssignedDriver().getName());
+            event.setDriverLat(duty.getAssignedDriver().getLatitude());
+            event.setDriverLng(duty.getAssignedDriver().getLongitude());
         }
+
+        event.setPickupLat(duty.getPickupLat());
+        event.setPickupLng(duty.getPickupLng());
+        event.setDropLat(duty.getDropLat());
+        event.setDropLng(duty.getDropLng());
+        event.setEventType("STATUS_UPDATE");
 
         if (duty.getStatus() == Duty.DutyStatus.PENDING && duty.getCreatedAt() != null) {
             long createdMs = duty.getCreatedAt()

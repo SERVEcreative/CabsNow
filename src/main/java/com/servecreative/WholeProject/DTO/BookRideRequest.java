@@ -21,6 +21,8 @@ public class BookRideRequest {
 
     private Double pickupLat;
     private Double pickupLng;
+    private Double dropLat;
+    private Double dropLng;
 
     public String getPickupLocation() {
         return pickupLocation;
@@ -68,5 +70,21 @@ public class BookRideRequest {
 
     public void setPickupLng(Double pickupLng) {
         this.pickupLng = pickupLng;
+    }
+
+    public Double getDropLat() {
+        return dropLat;
+    }
+
+    public void setDropLat(Double dropLat) {
+        this.dropLat = dropLat;
+    }
+
+    public Double getDropLng() {
+        return dropLng;
+    }
+
+    public void setDropLng(Double dropLng) {
+        this.dropLng = dropLng;
     }
 }
