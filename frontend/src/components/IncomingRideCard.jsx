@@ -3,7 +3,7 @@ import { useCountdown } from '../hooks/useRideSocket';
 export default function IncomingRideCard({ ride, onAccept, onSkip, accepting }) {
   const secondsLeft = useCountdown(ride.acceptDeadlineEpochMs);
   const expired = secondsLeft <= 0;
-  const progress = Math.min(100, (secondsLeft / 5) * 100);
+  const progress = Math.min(100, (secondsLeft / 30) * 100);
 
   if (expired) return null;
 

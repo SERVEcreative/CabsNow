@@ -86,7 +86,7 @@ export default function RiderDashboard() {
         dropLocation: drop,
         fare,
         vehicleType,
-        acceptDeadlineEpochMs: Date.now() + 5000,
+        acceptDeadlineEpochMs: Date.now() + 30000,
       });
       setMsg('');
     } catch (err) {
@@ -142,7 +142,7 @@ export default function RiderDashboard() {
             dropLocation: drop,
             fare,
             vehicleType,
-            acceptDeadlineEpochMs: Date.now() + 5000,
+            acceptDeadlineEpochMs: Date.now() + 30000,
           }}
           onCancel={cancelRide}
         />

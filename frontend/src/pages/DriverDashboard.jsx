@@ -22,7 +22,7 @@ export default function DriverDashboard() {
     setLiveEvent(event);
 
     if (event.status === 'PENDING') {
-      const deadline = event.acceptDeadlineEpochMs || Date.now() + 5000;
+      const deadline = event.acceptDeadlineEpochMs || Date.now() + 30000;
       if (deadline > Date.now()) {
         setIncomingRide({ ...event, acceptDeadlineEpochMs: deadline });
       }
@@ -90,6 +90,8 @@ export default function DriverDashboard() {
       }
     };
     loadPending();
+    const interval = setInterval(loadPending, 3000);
+    return () => clearInterval(interval);
   }, [isOnline, activeRide]);
 
   const shareLocation = async () => {

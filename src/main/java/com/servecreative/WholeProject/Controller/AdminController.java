@@ -31,4 +31,10 @@ public class AdminController {
         securityHelper.requireAdmin();
         return ResponseEntity.ok(adminService.getStats());
     }
+
+    @GetMapping("/rides/{dutyId}/events")
+    public ResponseEntity<?> rideEventTimeline(@PathVariable int dutyId) {
+        securityHelper.requireAdmin();
+        return ResponseEntity.ok(adminService.getRideEventTimeline(dutyId));
+    }
 }

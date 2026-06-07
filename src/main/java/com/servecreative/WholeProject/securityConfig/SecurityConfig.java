@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/ws/**", "/swagger-ui/**", "/swagger-ui.html", "/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/users/signup", "/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/driver/auth/signup", "/api/driver/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/admin/login").permitAll()
