@@ -21,16 +21,13 @@ public class RiderService {
     private final RiderRepository riderRepository;
     private final UserRepository userRepository;
     private final RideEventPublisher rideEventPublisher;
-    private final EmailNotificationService emailNotificationService;
 
     public RiderService(DutyRepository dutyRepository, RiderRepository riderRepository,
-                        UserRepository userRepository, RideEventPublisher rideEventPublisher,
-                        EmailNotificationService emailNotificationService) {
+                        UserRepository userRepository, RideEventPublisher rideEventPublisher) {
         this.dutyRepository = dutyRepository;
         this.riderRepository = riderRepository;
         this.userRepository = userRepository;
         this.rideEventPublisher = rideEventPublisher;
-        this.emailNotificationService = emailNotificationService;
     }
 
     public Rider saveRider(Rider rider) {
@@ -38,7 +35,7 @@ public class RiderService {
     }
 
     public Duty bookRide(int riderId, String pickupLocation, String dropLocation, String vehicleType,
-                         double fare, Double pickupLat, Double pickupLng) {
+                         double fare, Double pickupLat, Double pickupLng, Double dropLat, Double dropLng) {
         Rider rider = riderRepository.findById(riderId)
                 .orElseThrow(() -> new RuntimeException("Rider not found"));
 
@@ -61,14 +58,13 @@ public class RiderService {
         duty.setDropLocation(dropLocation);
         duty.setVehicleType(parsedVehicleType);
         duty.setFare(fare);
+        duty.setPickupLat(pickupLat);
+        duty.setPickupLng(pickupLng);
+        duty.setDropLat(dropLat);
+        duty.setDropLng(dropLng);
 
         Duty saved = dutyRepository.save(duty);
         rideEventPublisher.publish(saved, "Finding nearby drivers…", pickupLat, pickupLng);
-
-        userRepository.findById((long) riderId).ifPresent(user ->
-                emailNotificationService.sendRideConfirmation(
-                        user.getEmail(), saved.getDutyId(), pickupLocation, dropLocation, fare));
-
         return saved;
     }
 

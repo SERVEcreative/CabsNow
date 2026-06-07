@@ -61,7 +61,7 @@ export function buildDeadlineFromDuty(duty) {
   if (duty.acceptDeadlineEpochMs) return duty.acceptDeadlineEpochMs;
   if (duty.createdAt) {
     const created = new Date(duty.createdAt).getTime();
-    return created + 5000;
+    return created + 30000;
   }
-  return Date.now() + 5000;
+  return Date.now() + 30000;
 }

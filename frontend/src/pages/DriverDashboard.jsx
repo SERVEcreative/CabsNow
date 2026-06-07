@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { rides } from '../api';
 import IncomingRideCard from '../components/IncomingRideCard';
+import LiveMap from '../components/LiveMap';
 import LiveRideStatus from '../components/LiveRideStatus';
 import { buildDeadlineFromDuty, useRideSocket } from '../hooks/useRideSocket';
+import { useGeolocation, useLocationSync } from '../hooks/useGeolocation';
 
 export default function DriverDashboard() {
   const driverId = localStorage.getItem('userId');
@@ -14,7 +16,9 @@ export default function DriverDashboard() {
   const [msg, setMsg] = useState('');
   const [accepting, setAccepting] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
-  const [location, setLocation] = useState({ latitude: 28.6139, longitude: 77.2090 });
+
+  const { position, error: geoError, fallback } = useGeolocation(true);
+  const mapPosition = position || fallback;
 
   const topics = useMemo(() => [`/topic/driver/${driverId}`], [driverId]);
 
@@ -22,7 +26,7 @@ export default function DriverDashboard() {
     setLiveEvent(event);
 
     if (event.status === 'PENDING') {
-      const deadline = event.acceptDeadlineEpochMs || Date.now() + 5000;
+      const deadline = event.acceptDeadlineEpochMs || Date.now() + 30000;
       if (deadline > Date.now()) {
         setIncomingRide({ ...event, acceptDeadlineEpochMs: deadline });
       }
@@ -49,22 +53,32 @@ export default function DriverDashboard() {
 
   useRideSocket(topics, handleRideEvent);
 
+  const syncLocation = useCallback((loc) => rides.updateLocation(loc), []);
+  useLocationSync(mapPosition, syncLocation, 5000, isOnline);
+
   useEffect(() => {
-    const goOnline = async () => {
+    let active = true;
+
+    (async () => {
       try {
-        await rides.goOnline(location);
-        setIsOnline(true);
-        setMsg('You are online — receiving nearby rides only');
+        await rides.goOnline({
+          latitude: fallback.lat,
+          longitude: fallback.lng,
+        });
+        if (active) {
+          setIsOnline(true);
+          setMsg('You are online — GPS tracking active');
+        }
       } catch {
-        setMsg('Could not go online. Is backend running?');
+        if (active) setMsg('Could not go online. Is backend running?');
       }
-    };
-    goOnline();
+    })();
 
     return () => {
+      active = false;
       rides.goOffline().catch(() => {});
     };
-  }, []);
+  }, [fallback.lat, fallback.lng]);
 
   useEffect(() => {
     if (!isOnline) return;
@@ -79,6 +93,10 @@ export default function DriverDashboard() {
             dutyId: duty.dutyId,
             pickupLocation: duty.pickupLocation,
             dropLocation: duty.dropLocation,
+            pickupLat: duty.pickupLat,
+            pickupLng: duty.pickupLng,
+            dropLat: duty.dropLat,
+            dropLng: duty.dropLng,
             fare: duty.fare,
             vehicleType: duty.vehicleType,
             status: 'PENDING',
@@ -90,20 +108,9 @@ export default function DriverDashboard() {
       }
     };
     loadPending();
+    const interval = setInterval(loadPending, 3000);
+    return () => clearInterval(interval);
   }, [isOnline, activeRide]);
-
-  const shareLocation = async () => {
-    try {
-      if (isOnline) {
-        await rides.goOnline(location);
-      } else {
-        await rides.updateLocation(location);
-      }
-      setMsg('Location updated — matching improved');
-    } catch {
-      setMsg('Could not update location');
-    }
-  };
 
   const accept = async (dutyId) => {
     setAccepting(true);
@@ -133,15 +140,17 @@ export default function DriverDashboard() {
     }
   };
 
+  const mapRide = activeRide || incomingRide;
+
   return (
     <div className="container">
       <div className="dashboard-header">
         <div>
           <h2 className="page-title">Hi, {driverName}</h2>
-          <p className="page-sub">Geo-targeted requests · 5 sec to accept</p>
+          <p className="page-sub">Live GPS · geo-targeted requests</p>
         </div>
         <span className={`driver-status-chip ${isOnline ? 'online' : ''}`}>
-          {isOnline ? 'Online — nearby only' : 'Connecting…'}
+          {isOnline ? 'Online · GPS on' : 'Connecting…'}
         </span>
       </div>
 
@@ -154,9 +163,24 @@ export default function DriverDashboard() {
         />
       )}
 
-      <div className="online-banner">
-        <h3>Smart dispatch active</h3>
-        <p>You only receive rides near your location — not every driver in the city.</p>
+      <div className="card location-card">
+        <h3>Live map</h3>
+        <p className="page-sub">
+          {position ? 'Using your device GPS (updates every 5s)' : 'Allow location access for live GPS demo'}
+        </p>
+        <LiveMap
+          height={320}
+          follow="driver"
+          driver={mapPosition}
+          pickup={mapRide?.pickupLat != null ? { lat: mapRide.pickupLat, lng: mapRide.pickupLng } : null}
+          drop={mapRide?.dropLat != null ? { lat: mapRide.dropLat, lng: mapRide.dropLng } : null}
+        />
+        <div className="map-legend">
+          <span><i className="dot pickup-dot" /> Pickup</span>
+          <span><i className="dot drop-dot" /> Drop</span>
+          <span><i className="dot driver-dot" /> You (driver)</span>
+        </div>
+        {geoError && <p className="error">{geoError} — using Delhi default for demo.</p>}
       </div>
 
       {liveEvent && <LiveRideStatus event={liveEvent} role="DRIVER" />}
@@ -182,26 +206,8 @@ export default function DriverDashboard() {
         </div>
       )}
 
-      <div className="card location-card">
-        <h3>Your location</h3>
-        <div className="map-placeholder">📍 Delhi NCR — drivers matched within 10 km</div>
-        <div className="grid-2">
-          <div>
-            <label>Latitude</label>
-            <input type="number" step="any" value={location.latitude} onChange={(e) => setLocation({ ...location, latitude: +e.target.value })} />
-          </div>
-          <div>
-            <label>Longitude</label>
-            <input type="number" step="any" value={location.longitude} onChange={(e) => setLocation({ ...location, longitude: +e.target.value })} />
-          </div>
-        </div>
-        <button type="button" className="btn btn-primary" onClick={shareLocation}>
-          Update location
-        </button>
-      </div>
-
       {msg && (
-        <p className={msg.includes('accepted') || msg.includes('completed') || msg.includes('online') || msg.includes('Location') ? 'success' : 'error'}>
+        <p className={msg.includes('accepted') || msg.includes('completed') || msg.includes('online') || msg.includes('GPS') ? 'success' : 'error'}>
           {msg}
         </p>
       )}

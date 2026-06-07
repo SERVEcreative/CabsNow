@@ -6,6 +6,7 @@ import com.servecreative.WholeProject.DTO.AuthResponse;
 import com.servecreative.WholeProject.Model.Admin;
 import com.servecreative.WholeProject.Model.Duty;
 import com.servecreative.WholeProject.Model.Payment;
+import com.servecreative.WholeProject.Model.RideEventLog;
 import com.servecreative.WholeProject.Repository.*;
 import com.servecreative.WholeProject.Utils.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -21,18 +22,20 @@ public class AdminService {
     private final DriverRepository driverRepository;
     private final DutyRepository dutyRepository;
     private final PaymentRepository paymentRepository;
+    private final RideEventLogService rideEventLogService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public AdminService(AdminRepository adminRepository, UserRepository userRepository,
                         DriverRepository driverRepository, DutyRepository dutyRepository,
-                        PaymentRepository paymentRepository, PasswordEncoder passwordEncoder,
-                        JwtUtil jwtUtil) {
+                        PaymentRepository paymentRepository, RideEventLogService rideEventLogService,
+                        PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.adminRepository = adminRepository;
         this.userRepository = userRepository;
         this.driverRepository = driverRepository;
         this.dutyRepository = dutyRepository;
         this.paymentRepository = paymentRepository;
+        this.rideEventLogService = rideEventLogService;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
@@ -62,5 +65,11 @@ public class AdminService {
                 .filter(p -> p.getStatus() == Payment.PaymentStatus.PENDING)
                 .count();
         return new AdminStatsResponse(users, drivers, duties, completed, revenue, pendingPayments);
+    }
+
+    public java.util.List<RideEventLog> getRideEventTimeline(int dutyId) {
+        dutyRepository.findById(dutyId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Duty not found"));
+        return rideEventLogService.getTimeline(dutyId);
     }
 }

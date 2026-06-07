@@ -20,13 +20,16 @@ public class DriverService {
     private final DutyRepository dutyRepository;
     private final DutyService dutyService;
     private final DriverPresenceService presenceService;
+    private final RideLocationPublisher locationPublisher;
 
     public DriverService(DriverRepository driverRepository, DutyRepository dutyRepository,
-                         DutyService dutyService, DriverPresenceService presenceService) {
+                         DutyService dutyService, DriverPresenceService presenceService,
+                         RideLocationPublisher locationPublisher) {
         this.driverRepository = driverRepository;
         this.dutyRepository = dutyRepository;
         this.dutyService = dutyService;
         this.presenceService = presenceService;
+        this.locationPublisher = locationPublisher;
     }
 
     @Transactional
@@ -65,6 +68,7 @@ public class DriverService {
         driver.setLongitude(longitude);
         driverRepository.save(driver);
         presenceService.updateLocation(driverId, latitude, longitude);
+        locationPublisher.publishDriverLocation(driverId, latitude, longitude);
     }
 
     public void goOnline(int driverId, double latitude, double longitude) {

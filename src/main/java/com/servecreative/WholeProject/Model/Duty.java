@@ -41,6 +41,18 @@ public class Duty {
     @Column(name = "vehicle_type", nullable = false, length = 20)
     private VehicleType vehicleType; // Type of vehicle chosen for the ride
 
+    @Column(name = "pickup_lat")
+    private Double pickupLat;
+
+    @Column(name = "pickup_lng")
+    private Double pickupLng;
+
+    @Column(name = "drop_lat")
+    private Double dropLat;
+
+    @Column(name = "drop_lng")
+    private Double dropLng;
+
 
     // Getters and Setters
     public int getDutyId() {
@@ -111,6 +123,38 @@ public class Duty {
 
     public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
+    }
+
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(Double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public void setPickupLng(Double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
+
+    public Double getDropLat() {
+        return dropLat;
+    }
+
+    public void setDropLat(Double dropLat) {
+        this.dropLat = dropLat;
+    }
+
+    public Double getDropLng() {
+        return dropLng;
+    }
+
+    public void setDropLng(Double dropLng) {
+        this.dropLng = dropLng;
     }
 
     public enum DutyStatus {

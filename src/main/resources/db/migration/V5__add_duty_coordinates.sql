@@ -1,0 +1,5 @@
+ALTER TABLE duties
+    ADD COLUMN pickup_lat DOUBLE NULL,
+    ADD COLUMN pickup_lng DOUBLE NULL,
+    ADD COLUMN drop_lat DOUBLE NULL,
+    ADD COLUMN drop_lng DOUBLE NULL;
