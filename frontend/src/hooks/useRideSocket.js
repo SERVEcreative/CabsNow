@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { getApiBaseUrl } from '../config';
 
 export function useRideSocket(topics, onMessage) {
   const handlerRef = useRef(onMessage);
@@ -14,7 +13,7 @@ export function useRideSocket(topics, onMessage) {
     if (!topicsKey) return;
 
     const client = new Client({
-      webSocketFactory: () => new SockJS(`${API_URL}/ws`),
+      webSocketFactory: () => new SockJS(`${getApiBaseUrl()}/ws`),
       reconnectDelay: 3000,
       onConnect: () => {
         topics.filter(Boolean).forEach((topic) => {

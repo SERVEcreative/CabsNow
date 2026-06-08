@@ -136,6 +136,21 @@ KAFKA_ENABLED=true KAFKA_BOOTSTRAP_SERVERS=localhost:9092 mvn spring-boot:run
 | `KAFKA_BOOTSTRAP_SERVERS` | e.g. `kafka:9092` |
 | `MAIL_ENABLED` | Enable email sending |
 
+## Deploy (Oracle Cloud VM)
+
+Full step-by-step guide: **[docs/DEPLOY_ORACLE.md](docs/DEPLOY_ORACLE.md)**
+
+Quick start on Ubuntu VM:
+
+```bash
+git clone https://github.com/SERVEcreative/CabsNow.git
+cd CabsNow && git checkout feature/cabsnow-full-stack
+cp .env.oracle.example .env   # edit with your VM public IP
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+App: `http://YOUR_VM_PUBLIC_IP`
+
 ## Resume Highlights
 
 > Built a production-style cab booking platform with JWT auth, geo-targeted WebSocket dispatch, **Apache Kafka event backbone**, Redis driver presence, ride audit logging, Prometheus metrics, React UI with live rider–driver sync, Docker Compose, and CI/CD.
